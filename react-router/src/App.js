@@ -1,3 +1,4 @@
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Home from "./components/Home";
@@ -7,8 +8,11 @@ import New from "./components/New";
 import Index from "./components/Index";
 import NavBar from "./components/NavBar";
 import Fallback from "./components/Fallback";
+import { data, useApi } from "./api/api";
 
 function App() {
+  const { products, getIndex, getShow, postUpdate, postAddNew } = useApi(data);
+
   return (
     <div>
       <Routes>

@@ -1,21 +1,33 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-const useApi = (productList) => {
+export const useApi = (productList) => {
   const [products, setProducts] = useState(productList);
 
   const getIndex = () => products;
 
-  const getShow = (productid) => {};
+  const getShow = (productid) =>
+    products.filter((prod) => prod.id === productid);
 
-  const postUpdate = (productid, params) => {};
+  const postUpdate = (productid, productData) => {
+    let productList = [...products];
+    for (let i = 0; i < productList.length; i++) {
+      if (productList[i].id === productid) {
+        productList.splice(i, 1, productData);
+        break;
+      }
+    }
+    setProducts(productList);
+  };
 
   const postAddNew = (productData) => {
     const productList = products.push(productData);
     setProducts(productList);
   };
+
+  return { products, getIndex, getShow, postUpdate, postAddNew };
 };
 
-const products = [
+export const data = [
   {
     id: 1,
     name: "...",
