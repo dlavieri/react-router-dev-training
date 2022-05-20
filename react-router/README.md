@@ -2,7 +2,7 @@
 
 First created in 2014, React Router is a declarative, component based, client and server-side routing library for React. Just as React gives you a declarative and composable API for adding to and updating application state, React Router gives you a declarative and composable API for adding to and updating the user's navigation history.
 
-## <BrowserRouter>
+# <BrowserRouter>
 
 Under the hood, BrowserRouter uses both the history library as well as React Context.
 
@@ -16,20 +16,20 @@ The mechanism's for accessing the Context created by BrowserRouter include:
 - useParams
   etc.
 
-## <Routes>
+# <Routes>
 
 You can think of Routes as the metaphorical conductor (or a switch statement that operates on the paths) of your routes. Whenever you have one or more Routes, you'll most likely want to wrap them in a Routes.
 
-## <Route>
+# <Route>
 
 Route is the component used primarily to map a component to a path within your application.
 These can be nested in a way that can serve as a visual metaphor of the path tree of your app, as well as be used to wrap different groups of routes with a shared layout and/or relative paths.
 
-## <Navigate>
+# <Navigate>
 
 Navigate is a declarative wrapper for useNavigate, that re-routes to a new route within a components render call. It can be very useful for things like Authenticated routes, where redirect behavior is part of the render logic (rather than necessitating useEffect or other manual hooks). Importantly can take a replace prop which will replace rather than push the redirected-from path in the history stack.
 
-## <Link>
+# <Link>
 
 At its most basic, Link is an <a> tag that is built with React Router navigation. It can optionally tale things like state and query strings.
 
@@ -39,7 +39,7 @@ Note: you can even pass props to the Link'd component using the `state` prop, fo
 
 ---
 
-## Nesting Routes
+# Nesting Routes
 
 Nesting routes can be very useful:
 
@@ -64,21 +64,22 @@ for this to work, you will need to add an <Outlet/> within Layout:
 const Layout = () => {
 return (
 <>
+
 <nav>...</nav>
 <Outlet />
 </>
 )
 }
 
-## Outlet
+# Outlet
 
 Outlet is React Router's way of inserting children, where children are specifically a Route component.
 
 ---
 
-## Hooks
+# Hooks
 
-### useNavigate
+## useNavigate
 
 This is an imperative way to navigate in React Router. You simply pass the function accessible from useNavigate the route that you want to navigate to (relative to the basepath).
 
@@ -86,7 +87,7 @@ const navigate = useNavigate();
 ...
 navigate('/home')
 
-### useParams
+## useParams
 
 When you are defining your routes, you can indicate that there is a url parameter with this notation:
 <Route path="basepath/domain/:objectId"> element={<Element />} />
@@ -94,7 +95,7 @@ When you are defining your routes, you can indicate that there is a url paramete
 This informs ReactRouter that objectId is a url parameter and gives you access to it via the useParams hook within your components in this way:
 const { objectId } = useParams()
 
-### useSearchParams
+## useSearchParams
 
 This hook gives access to the search parameters in the URL:
 const [searchParams, setSearchParams] = useSearchParams();
@@ -104,7 +105,7 @@ const q = searchParams.get('q')
 const src = searchParams.get('src')
 const f = searchParams.get('f')
 
-## Code Splitting with React Lazy
+# Code Splitting with React Lazy
 
 In a large app with lots of code specific to different routes, React.lazy makes in coordination with React Router makes it very easy to load Route-specific code only when it is accessed by the user:
 
