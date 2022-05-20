@@ -1,70 +1,123 @@
-# Getting Started with Create React App
+# React Router
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+First created in 2014, React Router is a declarative, component based, client and server-side routing library for React. Just as React gives you a declarative and composable API for adding to and updating application state, React Router gives you a declarative and composable API for adding to and updating the user's navigation history.
 
-## Available Scripts
+## <BrowserRouter>
 
-In the project directory, you can run:
+Under the hood, BrowserRouter uses both the history library as well as React Context.
 
-### `npm start`
+- The history library helps React Router keep track of the browsing history of the application using the browser's built-in history stack
+- React Context helps make history available wherever React Router needs it.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The mechanism's for accessing the Context created by BrowserRouter include:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- useNavigate
+- useLocation
+- useParams
+  etc.
 
-### `npm test`
+## <Routes>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+You can think of Routes as the metaphorical conductor (or a switch statement that operates on the paths) of your routes. Whenever you have one or more Routes, you'll most likely want to wrap them in a Routes.
 
-### `npm run build`
+## <Route>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Route is the component used primarily to map a component to a path within your application.
+These can be nested in a way that can serve as a visual metaphor of the path tree of your app, as well as be used to wrap different groups of routes with a shared layout and/or relative paths.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## <Navigate>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Navigate is a declarative wrapper for useNavigate, that re-routes to a new route within a components render call. It can be very useful for things like Authenticated routes, where redirect behavior is part of the render logic (rather than necessitating useEffect or other manual hooks). Importantly can take a replace prop which will replace rather than push the redirected-from path in the history stack.
 
-### `npm run eject`
+## <Link>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+At its most basic, Link is an <a> tag that is built with React Router navigation. It can optionally tale things like state and query strings.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Note: you can even pass props to the Link'd component using the `state` prop, for example:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+<Link to="/products" state={{ isLoggedIn: true }} />
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## Nesting Routes
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Nesting routes can be very useful:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- When multiple routes share the same relative path (for example, /products for an index page, /products/:productId for a show page, /products/:productId/edit for an edit page, etc.)
+- When multiple routes share the same visual layout
 
-### Code Splitting
+If the first case is true but not the second you can compose the parent route to have the relative path prefix, but no element, like this:
+<Route path="products">
+<Route index element={<Index />} />
+<Route path=":productId" element={<Show />} />
+</Route>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+In this example, the Index page takes an 'index' prop, to tell React Router that at the base/default level of the parent Route, render the '<Index>' element. In this example, there is no UI Layout that is shared.
 
-### Analyzing the Bundle Size
+If you want to share some Layout, you can do so by passing the parent route the Layout component:
+<Route path="products" element={<Layout />}>
+<Route index element={<Index />} />
+<Route path=":productId" element={<Show />} />
+</Route>
+for this to work, you will need to add an <Outlet/> within Layout:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+const Layout = () => {
+return (
+<>
+<nav>...</nav>
+<Outlet />
+</>
+)
+}
 
-### Making a Progressive Web App
+## Outlet
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Outlet is React Router's way of inserting children, where children are specifically a Route component.
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Hooks
 
-### Deployment
+### useNavigate
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+This is an imperative way to navigate in React Router. You simply pass the function accessible from useNavigate the route that you want to navigate to (relative to the basepath).
 
-### `npm run build` fails to minify
+const navigate = useNavigate();
+...
+navigate('/home')
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### useParams
+
+When you are defining your routes, you can indicate that there is a url parameter with this notation:
+<Route path="basepath/domain/:objectId"> element={<Element />} />
+
+This informs ReactRouter that objectId is a url parameter and gives you access to it via the useParams hook within your components in this way:
+const { objectId } = useParams()
+
+### useSearchParams
+
+This hook gives access to the search parameters in the URL:
+const [searchParams, setSearchParams] = useSearchParams();
+
+They can then be accessed by their name:
+const q = searchParams.get('q')
+const src = searchParams.get('src')
+const f = searchParams.get('f')
+
+## Code Splitting with React Lazy
+
+In a large app with lots of code specific to different routes, React.lazy makes in coordination with React Router makes it very easy to load Route-specific code only when it is accessed by the user:
+
+const Home = React.lazy(() => import("./Home"));
+const Index = React.lazy(() => import("./Index"));
+const Show = React.lazy(() => import("./Show"));
+
+To make a smooth User experience, we use React Suspense API to show a loading page (the `fallback` prop) layout for each of the routes as the code is being loaded:
+
+<React.Suspense fallback={<LoadingPage/>}>
+<Routes>
+<Route path="/" element={<Home />} />
+<Route path="/index" element={<Index />} />
+<Route path="/show" element={<Show />} />
+</Routes>
+</React.Suspense>

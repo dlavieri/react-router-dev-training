@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useApiContext } from "../context/apiContext";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const { products } = useApiContext();
@@ -11,12 +12,14 @@ const Index = () => {
       <StyledContainer>
         {products.map((product) => {
           return (
-            <StyledCard>
-              <img src={product.img} />
-              <h5>{product.name}</h5>
-              <p>SKU: {product.id}</p>
-              <p>{product.desc}</p>
-            </StyledCard>
+            <Link to={`/products/${product.id}`}>
+              <StyledCard>
+                <img src={product.img} />
+                <h5>{product.name}</h5>
+                <p>SKU: {product.id}</p>
+                <p>{product.desc}</p>
+              </StyledCard>
+            </Link>
           );
         })}
       </StyledContainer>
